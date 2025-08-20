@@ -4,16 +4,8 @@
 import {config} from '@bedrock/core';
 import {fileURLToPath} from 'url';
 import path from 'path';
+import webpack from 'webpack';
 import '@bedrock/karma';
-// import {createRequire} from 'node:module';
-// import path from 'node:path';
-// const require = createRequire(import.meta.url);
-
-// config.karma.suites['bedrock-web-pouch-edv'] =
-//   path.join('web', '**', '*.js');
-
-// config.karma.config.webpack.resolve.fallback.events =
-//   require.resolve('events/');
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -31,6 +23,17 @@ config.karma.config.webpack.resolve = {
   ]
 };
 
+// Add DefinePlugin to inject environment variables
+config.karma.config.webpack.plugins = config.karma.config.webpack.plugins || [];
+config.karma.config.webpack.plugins.push(
+  new webpack.DefinePlugin({
+    // Inject environment variables at build time
+    'process.env.DYNAMSOFT_MRZ_LICENSE_KEY': JSON.stringify(
+      process.env.DYNAMSOFT_MRZ_LICENSE_KEY || null
+    )
+  })
+);
+
 // Add test images for scanning
 config.karma.config.files.push({
   pattern: 'images/qr_code/**/*.*',
@@ -40,6 +43,12 @@ config.karma.config.files.push({
 });
 config.karma.config.files.push({
   pattern: 'images/pdf417/**/*.*',
+  included: false,
+  served: true,
+  watched: false
+});
+config.karma.config.files.push({
+  pattern: 'images/mrz/**/*.*',
   included: false,
   served: true,
   watched: false

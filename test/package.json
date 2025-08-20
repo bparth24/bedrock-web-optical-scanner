@@ -4,7 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "test": "node --preserve-symlinks test.js test --framework karma",
+    "test": "dotenv -e ../.env -- node --preserve-symlinks test.js test --framework karma",
     "test-karma": "node --preserve-symlinks test.js test --framework karma",
     "debug": "node --preserve-symlinks test.js test --framework karma --log-level debug",
     "coverage": "node --preserve-symlinks test.js test --framework karma-coverage",
@@ -17,8 +17,11 @@
     "@bedrock/test": "^8.0.5",
     "@bedrock/views": "^11.0.0",
     "@bedrock/web": "^3.0.0",
-    "@bedrock/webpack": "^9.0.0",
     "@bedrock/web-optical-scanner": "file:..",
+    "@bedrock/webpack": "^9.0.0",
     "barcode-detector": "^3.0.5"
+  },
+  "devDependencies": {
+    "dotenv-cli": "^10.0.0"
   }
 }

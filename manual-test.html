@@ -3,215 +3,303 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Optical Scanner Manual Test</title>
-    
+    <title>🔍 Bedrock Web Optical Scanner - Manual Test</title>
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            max-width: 800px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
+            line-height: 1.6;
             background: #f5f5f5;
         }
-        
-        .container {
-            background: white;
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        
         .header {
             text-align: center;
-            margin-bottom: 32px;
-        }
-        
-        .status {
-            padding: 16px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: white;
             border-radius: 8px;
-            margin: 16px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
             font-weight: 500;
         }
-        
-        .status.loading {
-            background: #e3f2fd;
-            color: #1565c0;
-        }
-        
-        .status.success {
-            background: #e8f5e8;
-            color: #2e7d32;
-        }
-        
-        .status.error {
-            background: #ffebee;
-            color: #c62828;
-        }
-        
+        .loading { background: #e3f2fd; color: #1565c0; }
+        .success { background: #e8f5e8; color: #2e7d32; }
+        .error { background: #ffebee; color: #c62828; }
+        .warning { background: #fff3e0; color: #ef6c00; }
+
         .test-section {
-            margin: 24px 0;
-            padding: 20px;
-            border: 2px solid #e0e0e0;
+            background: white;
+            margin: 20px 0;
+            padding: 25px;
             border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-        
         .test-section h3 {
-            margin: 0 0 16px 0;
+            margin-top: 0;
             color: #333;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
         }
-        
         .controls {
             display: flex;
-            gap: 12px;
-            margin: 16px 0;
+            gap: 10px;
+            margin: 15px 0;
+            flex-wrap: wrap;
         }
-        
         .btn {
-            padding: 12px 24px;
+            padding: 12px 20px;
             border: none;
             border-radius: 6px;
+            cursor: pointer;
             font-size: 14px;
             font-weight: 500;
-            cursor: pointer;
             transition: all 0.2s;
         }
-        
-        .btn.primary {
-            background: #1976d2;
-            color: white;
-        }
-        
-        .btn.primary:hover {
-            background: #1565c0;
-        }
-        
-        .btn.secondary {
-            background: #e0e0e0;
-            color: #333;
-        }
-        
-        .btn.secondary:hover {
-            background: #d0d0d0;
-        }
-        
         .btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
         }
-        
-        .file-input {
-            margin: 16px 0;
+        .primary {
+            background: #1976d2;
+            color: white;
         }
-        
-        .results {
-            background: #f8f9fa;
-            border-radius: 6px;
-            padding: 16px;
-            margin: 16px 0;
-            font-family: Monaco, 'Courier New', monospace;
-            font-size: 12px;
-            line-height: 1.4;
-            white-space: pre-wrap;
-            word-break: break-word;
-            max-height: 300px;
-            overflow-y: auto;
+        .primary:hover:not(:disabled) {
+            background: #1565c0;
+            transform: translateY(-1px);
         }
-        
+        .secondary {
+            background: #757575;
+            color: white;
+        }
+        .secondary:hover:not(:disabled) {
+            background: #616161;
+        }
+        .mrz-btn {
+            background: #388e3c;
+            color: white;
+        }
+        .mrz-btn:hover:not(:disabled) {
+            background: #2e7d32;
+        }
+
         .video-container {
-            margin: 16px 0;
+            margin: 15px 0;
             text-align: center;
         }
-        
         video {
-            max-width: 100%;
+            border: 2px solid #ddd;
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            max-width: 100%;
+        }
+        
+        .file-input {
+            margin: 15px 0;
+        }
+        .file-input input[type="file"] {
+            margin-right: 10px;
+        }
+
+        .license-input {
+            margin: 15px 0;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .license-input label {
+            font-weight: 500;
+            min-width: 120px;
+        }
+        .license-input input {
+            flex: 1;
+            min-width: 300px;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .license-input small {
+            color: #666;
+            font-size: 12px;
+            flex-basis: 100%;
+        }
+
+        .results {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
         }
         
         .format-list {
             display: flex;
+            gap: 10px;
             flex-wrap: wrap;
-            gap: 8px;
-            margin: 12px 0;
         }
-        
         .format-tag {
-            padding: 4px 8px;
             background: #e3f2fd;
-            color: #1565c0;
-            border-radius: 4px;
+            color: #1976d2;
+            padding: 8px 12px;
+            border-radius: 20px;
             font-size: 12px;
             font-weight: 500;
         }
         
         .debug-info {
-            background: #f1f3f4;
+            background: #f5f5f5;
+            border: 1px solid #e0e0e0;
             border-radius: 6px;
-            padding: 12px;
-            margin: 16px 0;
+            padding: 15px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
             font-size: 12px;
-            color: #5f6368;
+        }
+
+        .mrz-validation {
+            background: #fff8e1;
+            border: 1px solid #ffcc02;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        .mrz-validation h4 {
+            margin-top: 0;
+            color: #f57f17;
+        }
+        .validation-score {
+            font-weight: bold;
+            color: #2e7d32;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🔍 Optical Scanner Manual Test</h1>
-            <p>Testing the bedrock-web-optical-scanner library</p>
-        </div>
+    <div class="header">
+        <h1>🔍 Bedrock Web Optical Scanner</h1>
+        <p>Manual testing interface for QR codes, PDF417 barcodes, and MRZ documents</p>
         
         <div id="status" class="status loading">
             📦 Loading library...
         </div>
+    </div>
         
-        <!-- Camera Scanning Test -->
-        <div class="test-section">
-            <h3>📹 Camera Scanning</h3>
-            <p>Test scanning with device camera</p>
-            
-            <div class="controls">
-                <button id="startCamera" class="btn primary">Start Camera</button>
-                <button id="stopCamera" class="btn secondary" disabled>Stop Camera</button>
-                <button id="scanCamera" class="btn primary" disabled>Scan Current Frame</button>
-            </div>
-            
-            <div class="video-container">
-                <video id="video" width="400" height="300" style="display: none;"></video>
-            </div>
-            
-            <div id="cameraResults" class="results" style="display: none;"></div>
+    <!-- Camera Scanning Test -->
+    <div class="test-section">
+        <h3>📹 Camera Scanning (QR & PDF417)</h3>
+        <p>Test scanning barcodes with device camera</p>
+        
+        <div class="controls">
+            <button id="startCamera" class="btn primary">Start Camera</button>
+            <button id="stopCamera" class="btn secondary" disabled>Stop Camera</button>
+            <button id="scanCamera" class="btn primary" disabled>Scan Current Frame</button>
         </div>
         
-        <!-- File Upload Test -->
-        <div class="test-section">
-            <h3>📁 File Upload Scanning</h3>
-            <p>Test scanning from uploaded images</p>
-            
-            <div class="file-input">
-                <input type="file" id="fileInput" accept="image/*" />
-                <button id="scanFile" class="btn primary">Scan File</button>
-            </div>
-            
-            <div id="fileResults" class="results" style="display: none;"></div>
+        <div class="video-container">
+            <video id="video" width="400" height="300" autoplay playsinline muted style="display: none;"></video>
         </div>
         
-        <!-- Formats Information -->
-        <div class="test-section">
-            <h3>🏷️ Supported Formats</h3>
-            <div id="formatsList" class="format-list">
-                <!-- Will be populated by JavaScript -->
-            </div>
+        <div id="cameraResults" class="results" style="display: none;"></div>
+    </div>
+    
+    <!-- File Upload Test -->
+    <div class="test-section">
+        <h3>📁 File Upload Scanning (QR & PDF417)</h3>
+        <p>Test scanning from uploaded barcode images</p>
+        
+        <div class="file-input">
+            <input type="file" id="fileInput" accept="image/*" />
+            <button id="scanFile" class="btn primary">Scan File</button>
         </div>
         
-        <!-- Debug Information -->
-        <div class="debug-info">
-            <strong>Debug Info:</strong>
-            <div id="debugInfo">Initializing...</div>
-        </div>
+        <div id="fileResults" class="results" style="display: none;"></div>
     </div>
 
+    <!-- MRZ Testing Section -->
+    <div class="test-section">
+        <h3>🆔 MRZ (Machine Readable Zone) Scanning</h3>
+        <p>Test scanning passports, ID cards, and other documents with MRZ</p>
+        
+        <!-- License Key Input -->
+        <div class="license-input">
+            <label for="mrzLicenseKey">Dynamsoft License:</label>
+            <input type="text" id="mrzLicenseKey" placeholder="Enter your Dynamsoft MRZ license key" />
+            <small>Required for MRZ scanning. Get a free trial key from <a href="https://www.dynamsoft.com/customer/license/trialLicense?product=mrz" target="_blank">Dynamsoft</a></small>
+        </div>
+        
+        <!-- MRZ Camera Scanning -->
+        <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 20px;">
+            <h4>📷 MRZ Camera Scanning</h4>
+            <p>Launch full-screen MRZ camera scanner with Dynamsoft UI</p>
+            <div class="controls">
+                <button id="mrzCameraBtn" class="btn mrz-btn">Launch MRZ Camera Scanner</button>
+            </div>
+            <div id="mrzCameraResults" class="results" style="display: none;"></div>
+        </div>
+        
+        <!-- MRZ File Upload -->
+        <div style="border-top: 1px solid #eee; padding-top: 20px; margin-top: 20px;">
+            <h4>📁 MRZ File Upload</h4>
+            <p>Upload passport or ID card images for MRZ extraction</p>
+            <div class="file-input">
+                <input type="file" id="mrzFileInput" accept="image/*" />
+                <button id="scanMrzFile" class="btn mrz-btn">Scan MRZ from File</button>
+            </div>
+            <div id="mrzFileResults" class="results" style="display: none;"></div>
+        </div>
+        
+        <!-- MRZ Validation Display -->
+        <div id="mrzValidation" class="mrz-validation" style="display: none;">
+            <h4>🔍 MRZ Validation Analysis</h4>
+            <div id="mrzValidationContent"></div>
+        </div>
+    </div>
+    
+    <!-- Multi-Format Testing -->
+    <div class="test-section">
+        <h3>🎯 Multi-Format Scanning</h3>
+        <p>Test scanning multiple formats simultaneously</p>
+        
+        <div class="controls">
+            <button id="scanAllFormats" class="btn primary">Scan All Formats (QR + PDF417 + MRZ)</button>
+        </div>
+        
+        <div class="file-input">
+            <input type="file" id="multiFormatFileInput" accept="image/*" />
+            <button id="scanMultiFormatFile" class="btn primary">Scan File (All Formats)</button>
+        </div>
+        
+        <div id="multiFormatResults" class="results" style="display: none;"></div>
+    </div>
+    
+    <!-- Formats Information -->
+    <div class="test-section">
+        <h3>🏷️ Supported Formats</h3>
+        <div id="formatsList" class="format-list">
+            <!-- Will be populated by JavaScript -->
+        </div>
+    </div>
+    
+    <!-- Debug Information -->
+    <div class="debug-info">
+        <strong>Debug Info:</strong>
+        <div id="debugInfo">Initializing...</div>
+    </div>
 
+    <!-- Set flag for manual testing -->
+    <script>
+        window.manualTest = true;
+    </script>
     <script src="./dist/bundle.js"></script>
 </body>
 </html>

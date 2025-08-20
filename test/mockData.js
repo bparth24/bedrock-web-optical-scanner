@@ -11,6 +11,57 @@ const mockData = {
   pdf417: {
     '001.png': '@\n\u001e\rANSI 636014100002DL00410237ZC02780193DLDAQI8882569\nDCSSIXNINE\nDDEN\nDACROCHATTEST\nDDFN\nDADNONE\nDDGN\nDCANONE\nDCBNONE\nDCDNONE\nDBD01012024\nDBB06061987\nDBA06062029\nDBC9\nDAU085 in\nDAYBLK\nDAG2415 1ST AVE\nDAISACRAMENTO\nDAJCA\nDAK95818\nDCFTESTDOCDISCRIM\nDCGUSA\nDAW160\nDCK1234567890\nDDAN\rZCZCE2QacgkK-PKYBggECGJ2CGHYYpBiuoxicGKYYxEEDGMYa-W6FYxiwohicGKAYqER1_3BgGLRBARi2pRicGGwYzAEY1hjcGNhYQXqifqpUU1b1X5UxVAMPD7fr6BRoQ68EKhFtyA2CdCS7GKsZUy_jiC5piRLwgLy0MJ7Tyeae6WaJM_tXhuRdJPX0GNpBAg\r',
     '002.png': '@\n\u001e\rANSI 636059090001DL00310268DLDAQ6665979\nDCSUSER\nDDEN\nDACTEST\nDDFN\nDADEXAMPLE\nDDGN\nDCAD\nDCBNONE\nDCDNONE\nDBA12102029\nDBD2025-08-05\nDBB07032003\nDBC1\nDAYBLK\nDAZBAL\nDAU077 in\nDAG123 STREET\nDAIHOMETOWN\nDAJAK\nDAK111118837  \nDCGUSA\nDCFXT447760R7596G\nDCJLZ212639D3312C\nDCKOG789393P4343N\nDDAF\nDDB11272016\r'
+  },
+  mrz: {
+    // US document MRZ data (test format)
+    'USA19.jpg': {
+      // Raw MRZ text (example format)
+      text: 'P<USAJOHNSON<<JOHN<MICHAEL<<<<<<<<<<<<<<<<<<<\nN1234567890USA9501011M2512311USA<<<<<<<<<<<02',
+      // Expected extracted fields
+      fields: {
+        documentNumber: 'N123456789',
+        firstName: 'JOHN MICHAEL',
+        lastName: 'JOHNSON',
+        dateOfBirth: '1995-01-01',
+        dateOfExpiry: '2025-12-31',
+        nationality: 'USA',
+        issuingState: 'USA',
+        sex: 'M',
+        documentType: 'P'
+      }
+    },
+    // Mexican document MRZ data (test format)
+    'MEX19.jpg': {
+      // Raw MRZ text (example format)
+      text: 'P<MEXGARCIA<<MARIA<ELENA<<<<<<<<<<<<<<<<<<<<\nM9876543210MEX8803151F2810225MEX<<<<<<<<<<<08',
+      // Expected extracted fields  
+      fields: {
+        documentNumber: 'M987654321',
+        firstName: 'MARIA ELENA',
+        lastName: 'GARCIA',
+        dateOfBirth: '1988-03-15',
+        dateOfExpiry: '2028-10-22',
+        nationality: 'MEX',
+        issuingState: 'MEX',
+        sex: 'F',
+        documentType: 'P'
+      }
+    },
+    // Canadian document MRZ data (test format)
+    'CAN19.jpg': {
+      text: 'P<CANSMITH<<ROBERT<JAMES<<<<<<<<<<<<<<<<<<<\nC5555666777CAN7712201M3006308CAN<<<<<<<<<<<04',
+      fields: {
+        documentNumber: 'C555566677',
+        firstName: 'ROBERT JAMES',
+        lastName: 'SMITH',
+        dateOfBirth: '1977-12-20',
+        dateOfExpiry: '2030-06-30',
+        nationality: 'CAN',
+        issuingState: 'CAN',
+        sex: 'M',
+        documentType: 'P'
+      }
+    }
   }
   /* eslint-enable */
 };

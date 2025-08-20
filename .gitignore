@@ -43,3 +43,4 @@ examples/vue-scanner-demo/package-lock.json
 .project
 .settings
 TAGS
+.env

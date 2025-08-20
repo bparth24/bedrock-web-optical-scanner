@@ -19,7 +19,8 @@
     "build": "webpack"
   },
   "dependencies": {
-    "barcode-detector": "^3.0.5"
+    "barcode-detector": "^3.0.5",
+    "dynamsoft-mrz-scanner": "^3.0.1"
   },
   "devDependencies": {
     "@bedrock/webpack": "^11.2.2",
