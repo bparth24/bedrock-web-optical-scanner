@@ -3,87 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Optical Scanner Manual Test</title>
-    
+    <title>🔍 Enhanced Optical Scanner Test</title>
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            max-width: 900px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
+            line-height: 1.6;
             background: #f5f5f5;
         }
-        
-        .container {
-            background: white;
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-        }
-        
         .header {
             text-align: center;
-            margin-bottom: 32px;
-        }
-        
-        .status {
-            padding: 16px;
-            border-radius: 8px;
-            margin: 16px 0;
-            font-weight: 500;
-            text-align: center;
-        }
-        
-        .status.loading {
-            background: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeaa7;
-        }
-        
-        .status.success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        .status.error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        
-        .status.scanning {
-            background: #e3f2fd;
-            color: #1565c0;
-            border: 1px solid #bbdefb;
-        }
-        
-        .test-section {
-            margin: 24px 0;
+            margin-bottom: 30px;
             padding: 20px;
-            border: 2px solid #e0e0e0;
+            background: white;
             border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-        
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: 500;
+        }
+        .loading { background: #e3f2fd; color: #1565c0; }
+        .success { background: #e8f5e8; color: #2e7d32; }
+        .error { background: #ffebee; color: #c62828; }
+        .warning { background: #fff3e0; color: #ef6c00; }
+
+        .test-section {
+            background: white;
+            margin: 20px 0;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
         .test-section h3 {
-            margin: 0 0 16px 0;
+            margin-top: 0;
             color: #333;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
         }
-        
         .controls {
             display: flex;
+            gap: 10px;
+            margin: 15px 0;
             flex-wrap: wrap;
-            gap: 12px;
-            margin: 16px 0;
-            justify-content: center;
         }
-        
         .btn {
             padding: 12px 20px;
             border: none;
             border-radius: 6px;
-            font-size: 14px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
@@ -254,7 +226,8 @@
             border-radius: 6px;
             padding: 12px;
             margin: 16px 0;
-            font-size: 12px;
+            font-family: Monaco, 'Courier New', monospace;
+            font-size: 11px;
             color: #5f6368;
             border: 1px solid #e0e0e0;
         }
@@ -270,102 +243,144 @@
             margin: 0 0 12px 0;
             color: #2e7d32;
         }
+
+        .mrz-validation {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+
+        .validation-summary {
+            margin-bottom: 12px;
+        }
+
+        .validation-fields {
+            font-size: 14px;
+        }
+
+        .file-input {
+            margin: 16px 0;
+        }
+
+        .file-input input[type="file"] {
+            margin-right: 12px;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🔍 Enhanced Optical Scanner Test</h1>
-            <p>Testing all plugins: QR Code, PDF417, and Enhanced PDF417 with Dynamsoft</p>
-        </div>
-        
-        <div id="status" class="status loading">
-            📦 Loading optical scanner library...
-        </div>
-        
-        <!-- License Configuration -->
-        <div class="test-section">
-            <h3>🔑 Dynamsoft License Configuration</h3>
-            <div class="license-section">
-                <p><strong>Optional:</strong> Enter your Dynamsoft license key to test enhanced PDF417 scanning</p>
-                <input type="text" id="licenseInput" class="license-input" 
-                       placeholder="Paste your Dynamsoft license key here (optional)">
-                <div class="controls">
-                    <button id="testLicense" class="btn primary">Test License</button>
-                    <button id="clearLicense" class="btn warning">Clear</button>
-                </div>
-                <div id="licenseStatus" style="margin-top: 8px; font-size: 12px;"></div>
-            </div>
-        </div>
-        
-        <!-- Camera Scanning Tests -->
-        <div class="test-section">
-            <h3>📹 Camera Scanning Tests</h3>
-            
+    <div class="header">
+        <h1>🔍 Enhanced Optical Scanner Test</h1>
+        <p>Testing all plugins: QR Code, PDF417, Enhanced PDF417, and MRZ</p>
+    </div>
+    
+    <div id="status" class="status loading">
+        📦 Loading optical scanner library...
+    </div>
+    
+    <!-- License Configuration -->
+    <div class="test-section">
+        <h3>🔑 Dynamsoft License Configuration</h3>
+        <div class="license-section">
+            <p><strong>Optional:</strong> Enter your Dynamsoft license key to test enhanced PDF417 and MRZ scanning</p>
+            <input type="text" id="licenseInput" class="license-input" 
+                   placeholder="Paste your Dynamsoft license key here (optional)">
             <div class="controls">
-                <button id="startCamera" class="btn success">📹 Start Camera</button>
-                <button id="stopCamera" class="btn danger" disabled>⏹️ Stop Camera</button>
+                <button id="testLicense" class="btn primary">Test License</button>
+                <button id="clearLicense" class="btn warning">Clear</button>
             </div>
-            
-            <div id="cameraContainer" class="camera-container" style="display: none;">
-                <video id="video" class="camera-video" autoplay muted playsinline width="640" height="480"></video>
-                <div id="scanOverlay" class="scan-overlay"></div>
-            </div>
-            
-            <div class="scan-modes">
-                <h4>Quick Scan Options:</h4>
-                <div class="controls">
-                    <button id="scanAny" class="btn primary" disabled>🔄 Scan Any Format (Auto)</button>
-                    <button id="scanQR" class="btn primary" disabled>🔳 QR Code Only</button>
-                    <button id="scanPDF417" class="btn primary" disabled>📋 PDF417 Only</button>
-                    <button id="scanEnhanced" class="btn primary" disabled>🚀 Enhanced PDF417</button>
-                    <button id="stopScan" class="btn warning" disabled>⏸️ Stop Scan</button>
-                </div>
-            </div>
-            
-            <div id="progress" class="progress-bar" style="display: none;">
-                <div id="progressFill" class="progress-fill"></div>
-            </div>
-            
-            <div id="countdown" class="countdown"></div>
-            
-            <div id="cameraResults" class="results">Camera results will appear here...</div>
+            <div id="licenseStatus" style="margin-top: 8px; font-size: 12px;"></div>
+        </div>
+    </div>
+    
+    <!-- Camera Scanning Tests -->
+    <div class="test-section">
+        <h3>📹 Camera Scanning Tests</h3>
+        
+        <div class="controls">
+            <button id="startCamera" class="btn success">📹 Start Camera</button>
+            <button id="stopCamera" class="btn danger" disabled>⏹️ Stop Camera</button>
         </div>
         
-        <!-- File Upload Tests -->
-        <div class="test-section">
-            <h3>📁 File Upload Tests</h3>
-            <p>Test with your PDF417 sample images</p>
-            
-            <div style="margin: 16px 0;">
+        <div id="cameraContainer" class="camera-container" style="display: none;">
+            <video id="video" class="camera-video" autoplay muted playsinline width="640" height="480"></video>
+            <div id="scanOverlay" class="scan-overlay" style="display: none;"></div>
+        </div>
+        
+        <div class="scan-modes">
+            <h4>📊 Scanning Options</h4>
+            <div class="controls">
+                <button id="scanAny" class="btn primary" disabled>🔍 Auto-Detect Any Format</button>
+                <button id="scanQR" class="btn primary" disabled>📱 QR Code Only</button>
+                <button id="scanPDF417" class="btn primary" disabled>📄 PDF417 Only</button>
+                <button id="scanEnhanced" class="btn primary" disabled>⚡ Enhanced PDF417</button>
+                <button id="scanMRZ" class="btn primary" disabled>🛂 MRZ (Unified Camera)</button>
+                <button id="scanMRZNative" class="btn success" disabled>🚀 MRZ Native UI</button>
+                <button id="stopScan" class="btn danger" disabled>⏹️ Stop Scanning</button>
+            </div>
+        </div>
+        
+        <div id="progress" class="progress-bar" style="display: none;">
+            <div id="progressFill" class="progress-fill"></div>
+        </div>
+        <div id="countdown" class="countdown"></div>
+        
+        <div id="cameraResults" class="results" style="display: none;"></div>
+    </div>
+    
+    <!-- File Upload Tests -->
+    <div class="test-section">
+        <h3>📁 File Upload Tests</h3>
+        
+        <div class="scan-modes">
+            <h4>🔍 Basic Scanning (QR + PDF417)</h4>
+            <div class="file-input">
                 <input type="file" id="fileInput" accept="image/*" />
+                <button id="scanFileAny" class="btn primary">🔍 Auto-Detect</button>
+                <button id="scanFileQR" class="btn primary">📱 QR Only</button>
+                <button id="scanFilePDF417" class="btn primary">📄 PDF417 Only</button>
+                <button id="scanFileEnhanced" class="btn primary">⚡ Enhanced PDF417</button>
             </div>
-            
-            <div class="controls">
-                <button id="scanFileAny" class="btn primary">🔄 Auto-Detect Format</button>
-                <button id="scanFileQR" class="btn primary">🔳 QR Only</button>
-                <button id="scanFilePDF417" class="btn primary">📋 PDF417 Only</button>
-                <button id="scanFileEnhanced" class="btn primary">🚀 Enhanced PDF417</button>
+            <div id="fileResults" class="results" style="display: none;"></div>
+        </div>
+
+        <div class="scan-modes">
+            <h4>🛂 MRZ Scanning</h4>
+            <div class="file-input">
+                <input type="file" id="mrzFileInput" accept="image/*" />
+                <button id="scanMrzFile" class="btn primary">🛂 Scan MRZ from File</button>
             </div>
-            
-            <div id="fileResults" class="results">File scan results will appear here...</div>
+            <div id="mrzFileResults" class="results" style="display: none;"></div>
+            <div id="mrzValidation" class="mrz-validation" style="display: none;">
+                <div id="mrzValidationContent"></div>
+            </div>
+        </div>
+
+        <div class="scan-modes">
+            <h4>🌐 Multi-Format Scanning</h4>
+            <div class="file-input">
+                <input type="file" id="multiFormatFileInput" accept="image/*" />
+                <button id="scanMultiFormatFile" class="btn success">🔍 Scan All Formats</button>
+            </div>
+            <div id="multiFormatResults" class="results" style="display: none;"></div>
+        </div>
+    </div>
+    
+    <!-- Debug Information -->
+    <div class="test-section">
+        <h3>🛠️ Debug Information</h3>
+        
+        <div class="format-list">
+            <strong>Supported Formats:</strong>
+            <div id="formatsList" class="format-list">
+                <!-- Populated by JavaScript -->
+            </div>
         </div>
         
-        <!-- System Information -->
-        <div class="test-section">
-            <h3>🏷️ System Information</h3>
-            
-            <div>
-                <strong>Supported Formats:</strong>
-                <div id="formatsList" class="format-list">
-                    <!-- Populated by JavaScript -->
-                </div>
-            </div>
-            
-            <div class="debug-info">
-                <strong>Debug Information:</strong>
-                <div id="debugInfo">Initializing...</div>
-            </div>
+        <div class="debug-info">
+            <strong>Debug Information:</strong>
+            <div id="debugInfo">Initializing...</div>
         </div>
     </div>
 
@@ -378,6 +393,7 @@
     <script>
         // Global state
         let scanner = null;
+        let mrzScanner = null;
         let videoStream = null;
         let isScanning = false;
         let scanTimeout = null;
@@ -399,6 +415,10 @@
         const countdown = document.getElementById('countdown');
         const cameraResults = document.getElementById('cameraResults');
         const fileResults = document.getElementById('fileResults');
+        const mrzFileResults = document.getElementById('mrzFileResults');
+        const mrzValidation = document.getElementById('mrzValidation');
+        const mrzValidationContent = document.getElementById('mrzValidationContent');
+        const multiFormatResults = document.getElementById('multiFormatResults');
         const formatsList = document.getElementById('formatsList');
         const debugInfo = document.getElementById('debugInfo');
 
@@ -414,15 +434,56 @@
         }
 
         function showResults(text, targetEl) {
-            targetEl.textContent = text;
+            targetEl.style.display = 'block';
+            targetEl.textContent = typeof text === 'object' ? JSON.stringify(text, null, 2) : text;
             targetEl.scrollTop = targetEl.scrollHeight;
+        }
+
+        function getMRZLicenseKey() {
+            const key = licenseInput.value.trim();
+            if(!key) {
+                setStatus('⚠️ MRZ license key required for MRZ scanning', 'warning');
+                return null;
+            }
+            return key;
+        }
+
+        function displayMRZValidation(validation) {
+            if(!validation) {
+                mrzValidation.style.display = 'none';
+                return;
+            }
+
+            mrzValidation.style.display = 'block';
+
+            let html = `<details open>
+                <summary><strong>📊 MRZ Validation Report</strong></summary>
+                <div class="validation-summary">
+                    <p><strong>Overall Status:</strong> ${validation.overallStatus}</p>
+                    <p><strong>Completeness:</strong> ${validation.statistics.overallCompleteness}%</p>
+                    <p><strong>Valid Fields:</strong> ${validation.statistics.validFields}/${validation.statistics.totalFields}</p>
+                </div>
+                <div class="validation-fields">`;
+
+            validation.fields.forEach(field => {
+                const statusColor = field.status === 'valid' ? '#28a745' :
+                    field.status === 'invalid' ? '#dc3545' : '#ffc107';
+                html += `<div style="margin: 4px 0; padding: 4px; border-left: 3px solid ${statusColor};">
+                    <strong>${field.label}:</strong> ${field.value || 'N/A'} 
+                    <span style="color: ${statusColor};">${field.status}${field.critical ? ' (critical)' : ''}</span>
+                </div>`;
+            });
+
+            html += '</div></details>';
+            mrzValidationContent.innerHTML = html;
         }
 
         function updateDebugInfo() {
             const info = {
                 libraryLoaded: !!lib,
                 scannerReady: !!scanner,
-                supportedFormats: scanner ? scanner.getSupportedFormats() : [],
+                mrzScannerReady: !!mrzScanner,
+                supportedFormats: mrzScanner ? mrzScanner.getSupportedFormats() : [],
                 cameraActive: !!videoStream,
                 dynamnsoftLicense: licenseInput.value ? 'Provided' : 'Not provided',
                 timestamp: new Date().toISOString()
@@ -438,17 +499,27 @@
             }
 
             try {
-                // Create scanner with all available plugins
-                const plugins = [
+                // Create basic scanner (QR + PDF417 + Enhanced PDF417)
+                const basicPlugins = [
                     lib.qrCodePlugin,
                     lib.pdf417Plugin,
                     lib.enhancedPdf417Plugin
                 ].filter(plugin => !!plugin);
 
-                scanner = new lib.OpticalScanner({ plugins });
+                scanner = new lib.OpticalScanner({ plugins: basicPlugins });
+
+                // Create MRZ-enabled scanner (includes all plugins)
+                const allPlugins = [
+                    lib.qrCodePlugin,
+                    lib.pdf417Plugin,
+                    lib.enhancedPdf417Plugin,
+                    lib.mrzPlugin
+                ].filter(plugin => !!plugin);
+
+                mrzScanner = new lib.OpticalScanner({ plugins: allPlugins });
 
                 // Display supported formats
-                const formats = scanner.getSupportedFormats();
+                const formats = mrzScanner.getSupportedFormats();
                 formatsList.innerHTML = '';
                 formats.forEach(format => {
                     const tag = document.createElement('div');
@@ -494,247 +565,324 @@
                 cameraContainer.style.display = 'block';
                 
                 setStatus('✅ Camera active - Ready to scan!', 'success');
+                updateDebugInfo();
                 
-                // Update buttons
-                document.getElementById('startCamera').disabled = true;
-                document.getElementById('stopCamera').disabled = false;
+                // Enable scan buttons, disable start camera, enable stop camera
                 document.getElementById('scanAny').disabled = false;
                 document.getElementById('scanQR').disabled = false;
                 document.getElementById('scanPDF417').disabled = false;
                 document.getElementById('scanEnhanced').disabled = false;
-                
-                updateDebugInfo();
+                document.getElementById('scanMRZ').disabled = false;
+                document.getElementById('scanMRZNative').disabled = false;
+                document.getElementById('startCamera').disabled = true;
+                document.getElementById('stopCamera').disabled = false;
                 
             } catch (error) {
-                console.error('Camera error:', error);
-                setStatus(`❌ Camera error: ${error.message}`, 'error');
+                setStatus(`❌ Camera failed: ${error.message}`, 'error');
             }
         }
 
         function stopCamera() {
-            stopScanning();
+            console.log('📹 EVENT: Stop camera button clicked');
             
             if (videoStream) {
                 videoStream.getTracks().forEach(track => track.stop());
                 videoStream = null;
+                cameraContainer.style.display = 'none';
+                
+                // Stop any ongoing scanning
+                stopScanning();
+                
+                // Reset ALL button states properly
+                document.getElementById('startCamera').disabled = false;
+                document.getElementById('stopCamera').disabled = true;
+                document.getElementById('scanAny').disabled = true;
+                document.getElementById('scanQR').disabled = true;
+                document.getElementById('scanPDF417').disabled = true;
+                document.getElementById('scanEnhanced').disabled = true;
+                document.getElementById('scanMRZ').disabled = true;
+                document.getElementById('scanMRZNative').disabled = true;
+                document.getElementById('stopScan').disabled = true;
+                
+                setStatus('📷 Camera stopped', 'loading');
+                updateDebugInfo();
             }
-            
-            videoEl.srcObject = null;
-            cameraContainer.style.display = 'none';
-            
-            setStatus('📹 Camera stopped', 'loading');
-            
-            // Update buttons
-            document.getElementById('startCamera').disabled = false;
-            document.getElementById('stopCamera').disabled = true;
-            document.getElementById('scanAny').disabled = true;
-            document.getElementById('scanQR').disabled = true;
-            document.getElementById('scanPDF417').disabled = true;
-            document.getElementById('scanEnhanced').disabled = true;
-            document.getElementById('stopScan').disabled = true;
-            
-            updateDebugInfo();
         }
 
-        // Scanning functions
-        function performScan(scanOptions, timeoutMs, description) {
-            if (!scanner || !videoStream || isScanning) {
-                showResults('❌ Camera not ready or already scanning', cameraResults);
-                return;
-            }
-
-            isScanning = true;
+        function startProgress(duration, message) {
+            progressEl.style.display = 'block';
+            scanOverlay.style.display = 'block';
+            
+            let progress = 0;
+            const interval = 100;
+            const increment = (interval / duration) * 100;
+            
             scanStartTime = Date.now();
             
-            setStatus(`🔍 ${description}...`, 'scanning');
-            showResults(`🔍 ${description}...\nHold barcode steady in yellow target area`, cameraResults);
-            
-            // Show progress
-            progressEl.style.display = 'block';
-            document.getElementById('stopScan').disabled = false;
-            
-            // Progress animation
-            let progress = 0;
             progressInterval = setInterval(() => {
-                progress += (100 / (timeoutMs / 100));
+                progress += increment;
                 progressFill.style.width = Math.min(progress, 100) + '%';
                 
                 const elapsed = Date.now() - scanStartTime;
-                const remaining = (timeoutMs - elapsed) / 1000;
+                const remaining = Math.max(0, duration - elapsed);
+                countdown.textContent = `${message} (${Math.ceil(remaining / 1000)}s)`;
                 
-                if (remaining <= 3 && remaining > 0) {
-                    countdown.textContent = `${Math.ceil(remaining)}s`;
-                } else {
-                    countdown.textContent = '';
+                if (progress >= 100) {
+                    stopProgress();
                 }
-            }, 100);
-            
-            // Set timeout
-            scanTimeout = setTimeout(() => {
-                stopScanning();
-                const elapsed = ((Date.now() - scanStartTime) / 1000).toFixed(1);
-                showResults(`⏰ Scan timeout after ${elapsed}s\n\nTips:\n• Ensure good lighting\n• Hold 6-12 inches from camera\n• Keep barcode in yellow target area\n• Try different angles`, cameraResults);
-                setStatus('⏰ Scan timeout - try repositioning barcode', 'error');
-            }, timeoutMs);
-            
-            // Perform the scan
-            scanner.scan(videoEl, scanOptions).then(results => {
-                stopScanning();
-                const elapsed = ((Date.now() - scanStartTime) / 1000).toFixed(1);
-                
-                if (results && results.length > 0) {
-                    const result = results[0];
-                    let output = `🎉 SUCCESS! (${elapsed}s)\n\n`;
-                    output += `📱 Format: ${result.format?.toUpperCase() || 'UNKNOWN'}\n`;
-                    output += `🚀 Engine: ${scanOptions.license ? 'Dynamsoft Enhanced' : 'Browser Standard'}\n\n`;
-                    
-                    // Parse result data
-                    if (result.driverLicense) {
-                        const dl = result.driverLicense;
-                        output += `👤 DRIVER LICENSE DATA:\n`;
-                        if (dl.DAC?.value && dl.DCS?.value) {
-                            output += `Name: ${dl.DAC.value} ${dl.DCS.value}\n`;
-                        }
-                        if (dl.DAQ?.value) {
-                            output += `License #: ${dl.DAQ.value}\n`;
-                        }
-                        if (dl.DBB?.value) {
-                            output += `DOB: ${dl.DBB.value}\n`;
-                        }
-                        if (dl.DBC?.value) {
-                            output += `Sex: ${dl.DBC.value}\n`;
-                        }
-                    } else {
-                        output += `📄 CONTENT:\n${result.text || JSON.stringify(result, null, 2)}`;
-                    }
-                    
-                    showResults(output, cameraResults);
-                    setStatus('✅ Scan successful!', 'success');
-                } else {
-                    showResults(`❌ No results after ${elapsed}s\n\nTry repositioning the barcode or improving lighting`, cameraResults);
-                    setStatus('❌ No results found', 'error');
-                }
-            }).catch(error => {
-                stopScanning();
-                const elapsed = ((Date.now() - scanStartTime) / 1000).toFixed(1);
-                console.error('Scan error:', error);
-                showResults(`❌ Scan error after ${elapsed}s:\n${error.message}\n\nCheck console for more details`, cameraResults);
-                setStatus('❌ Scan failed', 'error');
-            });
+            }, interval);
         }
 
-        function stopScanning() {
-            if (!isScanning) return;
-            
-            isScanning = false;
-            
-            if (scanTimeout) {
-                clearTimeout(scanTimeout);
-                scanTimeout = null;
-            }
-            
+        function stopProgress() {
             if (progressInterval) {
                 clearInterval(progressInterval);
                 progressInterval = null;
             }
-            
             progressEl.style.display = 'none';
+            scanOverlay.style.display = 'none';
             progressFill.style.width = '0%';
             countdown.textContent = '';
-            document.getElementById('stopScan').disabled = true;
-            
-            if (videoStream) {
-                setStatus('✅ Camera active - Ready for next scan', 'success');
-            }
         }
 
-        // File scanning
-        function scanFile(formats, description) {
-            const file = document.getElementById('fileInput').files[0];
-            if (!file) {
-                showResults('❌ Please select a file first', fileResults);
-                return;
+        function stopScanning() {
+            isScanning = false;
+            if (scanTimeout) {
+                clearTimeout(scanTimeout);
+                scanTimeout = null;
             }
-
-            showResults(`🔍 Scanning file: ${file.name}...`, fileResults);
+            stopProgress();
             
-            const license = licenseInput.value.trim();
-            const options = {
-                formats: formats,
-                mode: 'first'
-            };
-            
-            // Add license for enhanced scanning
-            if (license && formats.includes('pdf417')) {
-                options.license = license;
-                options.parseDL = true;
-                options.useDynamsoft = true;
+            // FIXED: Properly re-enable stop camera button after scanning
+            document.getElementById('stopScan').disabled = true;
+            if (videoStream) {
+                document.getElementById('stopCamera').disabled = false;
             }
+            
+            setStatus('⏹️ Scanning stopped', 'warning');
+        }
 
-            scanner.scan(file, options).then(results => {
-                if (results && results.length > 0) {
-                    const result = results[0];
-                    let output = `🎉 SUCCESS!\n\n`;
-                    output += `📱 Format: ${result.format?.toUpperCase() || 'UNKNOWN'}\n`;
-                    output += `📁 File: ${file.name}\n\n`;
-                    
-                    if (result.driverLicense) {
-                        const dl = result.driverLicense;
-                        output += `👤 DRIVER LICENSE DATA:\n`;
-                        Object.keys(dl).forEach(key => {
-                            if (key !== 'raw' && dl[key]?.value) {
-                                output += `${key}: ${dl[key].value}\n`;
-                            }
-                        });
-                    } else {
-                        output += `📄 CONTENT:\n${result.text || JSON.stringify(result, null, 2)}`;
+        async function performScan(options, timeout = 10000, message = 'Scanning') {
+            if (isScanning || !scanner) return;
+            
+            isScanning = true;
+            document.getElementById('stopScan').disabled = false;
+            
+            try {
+                setStatus(`🔍 ${message}...`, 'loading');
+                startProgress(timeout, message);
+                
+                // Use mrzScanner if MRZ format is requested, otherwise use basic scanner
+                const scannerToUse = options.formats.includes('mrz') ? mrzScanner : scanner;
+                
+                scanTimeout = setTimeout(() => {
+                    stopScanning();
+                    setStatus('⏱️ Scan timeout - No codes detected', 'warning');
+                }, timeout);
+                
+                const results = await scannerToUse.scan(videoEl, options);
+                
+                clearTimeout(scanTimeout);
+                stopProgress();
+                
+                showResults(results, cameraResults);
+                
+                if (results.length > 0) {
+                    // Check for MRZ validation data
+                    const mrzResult = results.find(r => r.format === 'mrz' && r.data?.validation);
+                    if (mrzResult) {
+                        displayMRZValidation(mrzResult.data.validation);
                     }
                     
-                    showResults(output, fileResults);
+                    setStatus(`✅ Found ${results.length} code(s)!`, 'success');
                 } else {
-                    showResults(`❌ No results found in ${file.name}\n\nTry a different image or format`, fileResults);
+                    setStatus('⚠️ No codes detected', 'warning');
                 }
-            }).catch(error => {
-                console.error('File scan error:', error);
-                showResults(`❌ File scan error:\n${error.message}`, fileResults);
-            });
+                
+            } catch (error) {
+                clearTimeout(scanTimeout);
+                stopProgress();
+                setStatus(`❌ Scan failed: ${error.message}`, 'error');
+                showResults({error: error.message}, cameraResults);
+            }
+            
+            isScanning = false;
+            
+            // FIXED: Properly restore button states after scanning
+            document.getElementById('stopScan').disabled = true;
+            if (videoStream) {
+                document.getElementById('stopCamera').disabled = false;
+            }
         }
 
-        // Event listeners
+        // FIXED: MRZ native camera scanning - Stop unified camera first
+        async function scanMRZNative() {
+            const licenseKey = getMRZLicenseKey();
+            if (!licenseKey || !mrzScanner) return;
+
+            try {
+                // STEP 1: Stop unified camera if running
+                if (videoStream) {
+                    console.log('🚀 Stopping unified camera before launching native scanner...');
+                    stopCamera();
+                    // Brief delay to ensure camera is properly released
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                }
+
+                setStatus('🚀 Opening MRZ native scanner...', 'loading');
+
+                // STEP 2: Launch native scanner with clean camera access
+                const results = await mrzScanner.scan(null, {
+                    formats: ['mrz'],
+                    mode: 'first',
+                    pluginOptions: {
+                        mrz: {
+                            licenseKey,
+                            mrzMode: 'camera' // Native Dynamsoft UI
+                        }
+                    }
+                });
+
+                showResults(results, cameraResults);
+
+                if (results.length > 0 && results[0].data?.validation) {
+                    displayMRZValidation(results[0].data.validation);
+                    setStatus(`✅ MRZ scanned successfully (${results[0].data.validation.overallStatus})`, 'success');
+                } else if (results.length > 0) {
+                    setStatus('✅ MRZ scanned successfully', 'success');
+                } else {
+                    setStatus('⚠️ No MRZ detected', 'warning');
+                }
+            } catch (error) {
+                setStatus(`❌ MRZ native scan failed: ${error.message}`, 'error');
+                showResults({error: error.message}, cameraResults);
+            }
+        }
+
+        // File scanning functions
+        async function scanFile(formats, mode = 'first', targetElement = fileResults) {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            if (!file || !scanner) return;
+
+            try {
+                setStatus(`🔍 Scanning file for ${formats.join(', ')}...`, 'loading');
+
+                const scannerToUse = formats.includes('mrz') ? mrzScanner : scanner;
+                const options = { formats, mode };
+
+                // Add license for enhanced scanning
+                const licenseKey = licenseInput.value.trim();
+                if (licenseKey && (formats.includes('pdf417_enhanced') || formats.includes('mrz'))) {
+                    options.pluginOptions = {};
+                    if (formats.includes('pdf417_enhanced')) {
+                        options.pluginOptions.pdf417_enhanced = { license: licenseKey };
+                    }
+                    if (formats.includes('mrz')) {
+                        options.pluginOptions.mrz = { licenseKey, mrzMode: 'file' };
+                    }
+                }
+
+                const results = await scannerToUse.scan(file, options);
+
+                showResults(results, targetElement);
+
+                if (results.length > 0) {
+                    setStatus(`✅ Found ${results.length} code(s) in file`, 'success');
+                } else {
+                    setStatus('⚠️ No codes detected in file', 'warning');
+                }
+            } catch (error) {
+                setStatus(`❌ File scan failed: ${error.message}`, 'error');
+                showResults({error: error.message}, targetElement);
+            }
+        }
+
+        async function scanMRZFile() {
+            const fileInput = document.getElementById('mrzFileInput');
+            const file = fileInput.files[0];
+            const licenseKey = getMRZLicenseKey();
+            if (!file || !licenseKey || !mrzScanner) return;
+
+            try {
+                setStatus('🔍 Scanning MRZ from file...', 'loading');
+
+                const results = await mrzScanner.scan(file, {
+                    formats: ['mrz'],
+                    mode: 'first',
+                    pluginOptions: {
+                        mrz: { licenseKey, mrzMode: 'file' }
+                    }
+                });
+
+                showResults(results, mrzFileResults);
+
+                if (results.length > 0 && results[0].data?.validation) {
+                    displayMRZValidation(results[0].data.validation);
+                    setStatus(`✅ MRZ extracted from file (${results[0].data.validation.overallStatus})`, 'success');
+                } else if (results.length > 0) {
+                    setStatus('✅ MRZ extracted from file', 'success');
+                } else {
+                    setStatus('⚠️ No MRZ detected in file', 'warning');
+                }
+            } catch (error) {
+                setStatus(`❌ MRZ file scan failed: ${error.message}`, 'error');
+                showResults({error: error.message}, mrzFileResults);
+            }
+        }
+
+        async function scanMultiFormatFile() {
+            const fileInput = document.getElementById('multiFormatFileInput');
+            const file = fileInput.files[0];
+            if (!file || !mrzScanner) return;
+
+            try {
+                setStatus('🔍 Scanning all formats from file...', 'loading');
+
+                const options = {
+                    formats: ['qr_code', 'pdf417', 'mrz'],
+                    mode: 'all'
+                };
+
+                const licenseKey = licenseInput.value.trim();
+                if (licenseKey) {
+                    options.pluginOptions = {
+                        mrz: { licenseKey, mrzMode: 'file' }
+                    };
+                }
+
+                const results = await mrzScanner.scan(file, options);
+
+                showResults(results, multiFormatResults);
+
+                if (results.length > 0) {
+                    setStatus(`✅ Found ${results.length} code(s) in file`, 'success');
+                } else {
+                    setStatus('⚠️ No codes detected in file', 'warning');
+                }
+            } catch (error) {
+                setStatus(`❌ Multi-format file scan failed: ${error.message}`, 'error');
+                showResults({error: error.message}, multiFormatResults);
+            }
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            updateDebugInfo();
+        });
+
         document.getElementById('testLicense').addEventListener('click', () => {
-            console.log('🔑 LICENSE: Testing license key');
-            
             const license = licenseInput.value.trim();
-            if (!license) {
-                console.log('🔑 LICENSE: No license key provided');
-                setLicenseStatus('Please enter a license key first', true);
-                return;
-            }
-            
-            console.log('🔑 LICENSE: License key details:', {
-                length: license.length,
-                startsWith: license.substring(0, 10) + '...',
-                hasSpecialChars: /[^a-zA-Z0-9]/.test(license)
-            });
-            
-            setLicenseStatus('Testing license...', false);
-            
-            // Basic validation
-            if (license.length < 10) {
-                console.log('🔑 LICENSE: License appears too short');
-                setLicenseStatus('License key appears too short', true);
+            if (license) {
+                setLicenseStatus('✅ License provided (not validated until scanning)');
             } else {
-                console.log('🔑 LICENSE: License format looks valid');
-                setLicenseStatus('License key format looks valid ✓', false);
+                setLicenseStatus('❌ Please enter a license key', true);
             }
-            
             updateDebugInfo();
         });
 
         document.getElementById('clearLicense').addEventListener('click', () => {
-            console.log('🔑 LICENSE: Clearing license key');
             licenseInput.value = '';
-            setLicenseStatus('License cleared', false);
+            setLicenseStatus('');
             updateDebugInfo();
         });
 
@@ -743,17 +891,29 @@
             startCamera();
         });
         
+        // FIXED: Stop camera event listener
         document.getElementById('stopCamera').addEventListener('click', () => {
-            console.log('📹 EVENT: Stop camera button clicked');
             stopCamera();
         });
 
         // Camera scanning buttons
         document.getElementById('scanAny').addEventListener('click', () => {
             console.log('🔍 EVENT: Scan Any button clicked');
-            const formats = scanner.getSupportedFormats();
+            const formats = mrzScanner.getSupportedFormats();
             console.log('🔍 EVENT: Auto-detect formats:', formats);
-            performScan({ formats, mode: 'first' }, 10000, 'Auto-detecting any format');
+            
+            // FIXED: Include MRZ license key for auto-detect if available
+            const options = { formats, mode: 'first' };
+            const licenseKey = licenseInput.value.trim();
+            
+            if (licenseKey && formats.includes('mrz')) {
+                options.pluginOptions = {
+                    mrz: { licenseKey, mrzMode: 'element' }
+                };
+                console.log('🔍 EVENT: Using MRZ license for auto-detect');
+            }
+            
+            performScan(options, 10000, 'Auto-detecting any format');
         });
 
         document.getElementById('scanQR').addEventListener('click', () => {
@@ -771,17 +931,35 @@
             const license = licenseInput.value.trim();
             const options = {
                 formats: ['pdf417_enhanced'],
-                mode: 'first',
-                parseDL: true,
-                useDynamsoft: !!license
+                mode: 'first'
             };
             if (license) {
-                options.license = license;
+                options.pluginOptions = { pdf417_enhanced: { license } };
                 console.log('🔍 EVENT: Using Dynamsoft license for enhanced scan');
             } else {
-                console.log('🔍 EVENT: No license provided, using browser scanning');
+                console.log('🔍 EVENT: No license provided, using fallback scanning');
             }
             performScan(options, 10000, 'Enhanced PDF417 scan');
+        });
+
+        document.getElementById('scanMRZ').addEventListener('click', () => {
+            console.log('🔍 EVENT: Scan MRZ button clicked');
+            const licenseKey = getMRZLicenseKey();
+            if (!licenseKey) return;
+            
+            const options = {
+                formats: ['mrz'],
+                mode: 'first',
+                pluginOptions: {
+                    mrz: { licenseKey, mrzMode: 'element' }
+                }
+            };
+            performScan(options, 15000, 'Scanning MRZ (unified camera)');
+        });
+
+        document.getElementById('scanMRZNative').addEventListener('click', () => {
+            console.log('🔍 EVENT: Scan MRZ Native button clicked');
+            scanMRZNative();
         });
 
         document.getElementById('stopScan').addEventListener('click', () => {
@@ -792,22 +970,32 @@
         // File scanning buttons
         document.getElementById('scanFileAny').addEventListener('click', () => {
             console.log('📁 EVENT: Scan File Any button clicked');
-            scanFile(scanner.getSupportedFormats(), 'Auto-detect');
+            scanFile(['qr_code', 'pdf417'], 'first');
         });
 
         document.getElementById('scanFileQR').addEventListener('click', () => {
             console.log('📁 EVENT: Scan File QR button clicked');
-            scanFile(['qr_code'], 'QR Code');
+            scanFile(['qr_code'], 'first');
         });
 
         document.getElementById('scanFilePDF417').addEventListener('click', () => {
             console.log('📁 EVENT: Scan File PDF417 button clicked');
-            scanFile(['pdf417'], 'PDF417');
+            scanFile(['pdf417'], 'first');
         });
 
         document.getElementById('scanFileEnhanced').addEventListener('click', () => {
             console.log('📁 EVENT: Scan File Enhanced button clicked');
-            scanFile(['pdf417_enhanced'], 'Enhanced PDF417');
+            scanFile(['pdf417_enhanced'], 'first');
+        });
+
+        document.getElementById('scanMrzFile').addEventListener('click', () => {
+            console.log('📁 EVENT: Scan MRZ File button clicked');
+            scanMRZFile();
+        });
+
+        document.getElementById('scanMultiFormatFile').addEventListener('click', () => {
+            console.log('📁 EVENT: Scan Multi-Format File button clicked');
+            scanMultiFormatFile();
         });
 
         // Cleanup on page unload

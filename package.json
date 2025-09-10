@@ -20,7 +20,8 @@
   },
   "dependencies": {
     "barcode-detector": "^3.0.5",
-    "dynamsoft-javascript-barcode": "=9.6.1"
+    "dynamsoft-javascript-barcode": "=9.6.1",
+    "dynamsoft-mrz-scanner": "^3.0.1"
   },
   "devDependencies": {
     "@bedrock/webpack": "^11.2.2",
