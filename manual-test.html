@@ -393,6 +393,38 @@
             <div id="fileResults" class="results">File scan results will appear here...</div>
         </div>
 
+        <!-- CameraScanner API Tests -->
+        <div style="border: 2px solid blue; padding: 15px; margin: 20px 0;">
+          <h3>CameraScanner API Testing</h3>
+          
+          <div style="margin: 10px 0;">
+              <label>License Key: </label>
+              <input type="text" id="cameraLicenseInput" placeholder="Optional Dynamsoft license key" style="width: 300px;">
+          </div>
+          
+          <div style="margin: 10px 0;">
+              <label>Scan Type: </label>
+              <select id="scanTypeSelect">
+                  <option value="barcode">Barcode</option>
+                  <option value="mrz">MRZ</option>
+              </select>
+              
+              <label style="margin-left: 20px;">Scan Mode: </label>
+              <select id="scanModeSelect">
+                  <option value="first">First</option>
+                  <option value="all">All</option>
+                  <option value="exhaustive">Exhaustive</option>
+              </select>
+          </div>
+          
+          <div style="margin: 10px 0;">
+              <button id="testCameraScannerBtn">Test CameraScanner</button>
+              <button id="checkFeaturesBtn">Check Enhanced Features</button>
+          </div>
+          
+          <pre id="cameraScannerResults" style="background: #f5f5f5; padding: 10px; max-height: 200px; overflow-y: auto;"></pre>
+        </div>
+
         <!-- MRZ Validation Display -->
         <div class="test-section">
             <div id="mrzValidation" class="mrz-validation" style="display: none;">
@@ -433,6 +465,7 @@
         let scanTimeout = null;
         let progressInterval = null;
         let scanStartTime = null;
+        let cameraScanner = null;
 
         // Get library reference
         const lib = window.OpticalScannerLib;
@@ -999,6 +1032,49 @@
         document.getElementById('scanFileEnhanced').addEventListener('click', () => {
             console.log('📁 EVENT: Scan File Enhanced button clicked');
             scanFile(['pdf417_enhanced'], 'Enhanced PDF417');
+        });
+
+        // CameraScanner API Tests
+        document.getElementById('testCameraScannerBtn').addEventListener('click', async () => {
+          const licenseKey = document.getElementById('cameraLicenseInput').value.trim();
+          const scanType = document.getElementById('scanTypeSelect').value;
+          const scanMode = document.getElementById('scanModeSelect').value;
+          const resultsEl = document.getElementById('cameraScannerResults');
+          
+          try {
+            // Test CameraScanner creation and configuration
+            cameraScanner = new lib.CameraScanner({
+              scanType,
+              scanMode,
+              licenseKey
+            });
+            
+            let output = `✅ CameraScanner created successfully!\n\n`;
+            output += `Configuration:\n`;
+            output += JSON.stringify(cameraScanner.getConfig(), null, 2) + '\n\n';
+            
+            output += `Enhanced Features:\n`;
+            output += JSON.stringify(cameraScanner.getEnhancedFeatures(), null, 2) + '\n\n';
+
+            resultsEl.textContent = output;
+          } catch (error) {
+              resultsEl.textContent = `❌ Error: ${error.message}`;
+            }
+        });
+
+        document.getElementById('checkFeaturesBtn').addEventListener('click', () => {
+            const resultsEl = document.getElementById('cameraScannerResults');
+            
+            if (!cameraScanner) {
+                resultsEl.textContent = '❌ Create CameraScanner first';
+                return;
+            }
+            
+            const features = cameraScanner.getEnhancedFeatures();
+            let output = `🔍 Enhanced Features Check:\n\n`;
+            output += JSON.stringify(features, null, 2);
+            
+            resultsEl.textContent = output;
         });
 
         // Cleanup on page unload
